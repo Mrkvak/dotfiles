@@ -1,3 +1,3 @@
 #!/bin/bash
-swaylock -f -c 000000 &
+swaylock -f --config .config/swaylock/config &
 sudo /usr/local/sbin/s2ram.sh
