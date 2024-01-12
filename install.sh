@@ -14,3 +14,6 @@ for i in $(find . -name "*.tpl"); do
 	TGTN=$(echo "$i" | sed 's/.tpl$//')
 	unifdef -t -Uhome -Uwork -D$1 $i > $HOME/$TGTN
 done
+
+gsettings set org.gnome.desktop.interface gtk-theme oomox-mrkvoschema
+gsettings set org.gnome.desktop.interface icon-theme oomox-mrkvoschema
