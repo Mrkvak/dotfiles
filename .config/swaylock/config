@@ -1,0 +1,16 @@
+ignore-empty-password
+show-failed-attempts
+
+font=Hack
+
+color=2b303b
+
+bs-hl-color=ff0000
+
+
+layout-bg-color=2b303b
+layout-text-color=33ccff
+
+ring-color=0096c8
+key-hl-color=8ee2fe
+
