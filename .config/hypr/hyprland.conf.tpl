@@ -238,6 +238,8 @@ bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
 
 
+bind = $mainMod,F,fullscreen,1 
+
 exec-once = swayidle -w -C $HOME/.config/swayidle/config
 exec-once = waybar
 exec-once = gentoo-pipewire-launcher restart
