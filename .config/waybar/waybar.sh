@@ -2,7 +2,7 @@
 vpn() {
 	VPN_STR=""
 	for i in /etc/init.d/openvpn*; do
-		VPN_NAME=$(echo $i | cut -d '.' -f 3)
+		VPN_NAME=$(echo "$i" | cut -d '.' -f 3)
 		if [ -z "$VPN_NAME" ]; then
 			VPN_NAME="default"
 		fi
@@ -36,8 +36,8 @@ network() {
 		RXB_PREV=$(cat /tmp/waybar_net_rxb)
 		STAMP_PREV=$(cat /tmp/waybar_net_stamp)
 
-		TXB_CUR=$(cat /sys/class/net/${IFACE_UP}/statistics/tx_bytes)
-		RXB_CUR=$(cat /sys/class/net/${IFACE_UP}/statistics/rx_bytes)
+		TXB_CUR=$(cat "/sys/class/net/${IFACE_UP}/statistics/tx_bytes")
+		RXB_CUR=$(cat "/sys/class/net/${IFACE_UP}/statistics/rx_bytes")
 		STAMP_CUR=$(date +%s)
 
 		DELTA_SECONDS=$((STAMP_CUR-STAMP_PREV))
@@ -71,14 +71,14 @@ network() {
 		if [ -z "$SSID" ]; then
 			SSID="connecting..."
 		fi
-		IP=$(ip -j a l dev $WLAN_IFACE| jq -r '.[] | select(.operstate == "UP").addr_info[] | select(.family == "inet").local')
+		IP=$(ip -j a l dev "$WLAN_IFACE"| jq -r '.[] | select(.operstate == "UP").addr_info[] | select(.family == "inet").local')
 		SIGNAL=$(awk "/${WLAN_IFACE}/{gsub(/\\./, \"\", \$4); print \$4}" /proc/net/wireless)
 		NETSTATUS="${NETSTATUS}$IP ($SSID, ${SIGNAL}dBm) | $SPEED_SUFFIX"
 
 	fi
 
 	if [ -n "$ETH_IFACE" ]; then
-		IP=$(ip -j a l dev $ETH_IFACE| jq -r '.[] | select(.operstate == "UP").addr_info[] | select(.family == "inet").local')
+		IP=$(ip -j a l dev "$ETH_IFACE"| jq -r '.[] | select(.operstate == "UP").addr_info[] | select(.family == "inet").local')
 		NETSTATUS="${NETSTATUS} $IP | $SPEED_SUFFIX"
 	fi
 
@@ -103,15 +103,15 @@ volume() {
 		VOLUME_ICON=$(printf "🔊")
 	fi
 
-	printf "{\"text\": \"%s %+4s%s\"},\n" "$VOLUME_ICON" "$VOLUME"
+	printf "{\"text\": \"%s %+4s\"},\n" "$VOLUME_ICON" "$VOLUME"
 }
 
 cpu() {
-	CPU_USAGE=$[100-$(vmstat 1 2|tail -1|awk '{print $15}')]
-	CPU_LOAD=$(cat /proc/loadavg |cut -d ' ' -f 1)
-	CPU_LOAD_COARSE=$(echo $CPU_LOAD | cut -d '.' -f 1)
-	CPU_CORES=$(cat /proc/cpuinfo|grep processor|wc -l)
-	if [ $CPU_LOAD_COARSE -gt $CPU_CORES ]; then
+	CPU_USAGE=$((100-$(vmstat 1 2|tail -1|awk '{print $15}')))
+	CPU_LOAD=$(cut -d ' ' -f 1 /proc/loadavg)
+	CPU_LOAD_COARSE=$(echo "$CPU_LOAD" | cut -d '.' -f 1)
+	CPU_CORES=$(grep -c processor /proc/cpuinfo)
+	if [ "$CPU_LOAD_COARSE" -gt "$CPU_CORES" ]; then
 		CPU_CRIT="alert"
 	else
 		CPU_CRIT="normal"
@@ -123,7 +123,7 @@ cpu() {
 	fi
 	if [ -z "$CPU_TEMP" ]; then
 		CPU_TEMP="??"
-	elif [ $CPU_TEMP -gt 90 ]; then
+	elif [ "$CPU_TEMP" -gt 90 ]; then
 		CPU_CRIT="alert"
 	fi
 
@@ -135,7 +135,7 @@ mem() {
 	MEM_USED=$(free -m|grep Mem|awk '{print $3}')
 	MEM_AVAILABLE=$(free -m|grep Mem|awk '{print $7}')
 
-	if [ $MEM_AVAILABLE -lt 500 ]; then
+	if [ "$MEM_AVAILABLE" -lt 500 ]; then
 		MEM_CRIT="alert"
 	else
 		MEM_CRIT="normal"
@@ -146,7 +146,7 @@ mem() {
 
 battery() {
 	BAT_LEVEL=$(cat /sys/class/power_supply/BAT0/capacity)
-	if [ $BAT_LEVEL -lt 10 ]; then
+	if [ "$BAT_LEVEL" -lt 10 ]; then
 		BAT_CRIT=alert
 		BAT_STATE=""
 	else
@@ -173,7 +173,7 @@ battery() {
                 BAT_ENERGY_REMAINING=$((BAT_ENERGY_FULL-BAT_ENERGY))
         fi
 
-	if [ $BAT_POWER -gt 0 ]; then
+	if [ "$BAT_POWER" -gt 0 ]; then
 		REMAINING_HOURS=$((BAT_ENERGY_REMAINING/BAT_POWER))
 		REMAINING_MINS=$(((BAT_ENERGY_REMAINING-(REMAINING_HOURS*BAT_POWER))*60/BAT_POWER))
 	else

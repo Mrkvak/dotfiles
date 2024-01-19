@@ -17,13 +17,13 @@ fi
 case $1 in
 	inc)
 		BL_NEW=$((BL_CURRENT+STEP))
-		if [ $BL_NEW -gt $BL_MAX ]; then
+		if [ "$BL_NEW" -gt "$BL_MAX" ]; then
 			BL_NEW=$BL_MAX
 		fi
 		;;
 	dec)
 		BL_NEW=$((BL_CURRENT-STEP))
-		if [ $BL_NEW -lt 0 ]; then
+		if [ "$BL_NEW" -lt 0 ]; then
 			BL_NEW=0
 		fi
 		;;
