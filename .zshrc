@@ -106,7 +106,7 @@ bindkey "\e[5D" backward-word
 bindkey "\e\e[C" forward-word
 bindkey "\e\e[D" backward-word
 
-do_cat() {
+catv() {
 	if [[ -t 1 ]]; then 
 		/bin/cat -v $* ; 
 	else
@@ -114,7 +114,100 @@ do_cat() {
 	fi
 }
 
-alias cat="do_cat"
+bar_size=40
+bar_char_done="#"
+bar_char_todo=" "
+bar_percentage_scale=2
+
+progressbar() {
+	local current_val="$1"
+	local target_val="$2"
+	local width=20
+	
+	local done_ratio=$(echo "scale=8; ${current_val} / ${target_val}" | bc)
+	
+	local pixels_done=$(echo "scale=0; ${width} * ${done_ratio}" | bc)
+	local pixels_remaining=$(echo "scale=0; ${width} * (1-${done_ratio})" | bc)
+
+	printf "\r["
+	printf "%${pixels_done}s" "" | tr ' ' '#'
+	printf "%${pixels_remaining}s]" ''
+	
+}
+
+
+dirtyBytes() {
+	awk '/Dirty:|Writeback:/ {print $2 $3}' /proc/meminfo|tr 'k' 'K'|numfmt --from=iec --suffix B|tr -d 'B'|awk '{sum+=$1} END{print sum}'
+}
+
+formatSeconds() {
+	local seconds="$1"
+	local t=
+
+	if [ "$seconds" -gt 3600 ]; then
+		t=$((seconds / 3600))
+		seconds=$((seconds % 3600))
+		echo -n "${t}h "
+	fi
+	if [ "$seconds" -gt 60 ]; then
+		t=$((seconds / 60))
+		seconds=$((seconds % 60))
+		echo -n "${t}m "
+	fi
+	echo "${t}s"
+}
+
+
+
+syncv() {
+	local start_b=$(dirtyBytes)
+	local start_ts=$(date +%s)
+
+	local now_b=
+	local now_ts=
+
+	local elapsed=
+	local written=
+	local speed=
+
+	local remaining_nice=
+	local time_estimate=
+	local speed_nice=
+
+	set +m
+	sync &
+	while [ -e /proc/$! ]; do
+		sleep 0.1
+		now_b=$(dirtyBytes)
+		now_ts=$(date +%s)
+		elapsed=$((now_ts-start_ts))
+		written=$((now_b-start_b))
+		
+		if [ $elapsed -eq 0 ]; then
+			continue
+		fi
+		
+		speed=$((written/elapsed))
+
+		remaining_nice=$(echo "${now_b}" | numfmt --to iec --suffix B)
+		speed_nice=$(echo "${speed}" | numfmt --to iec --suffix B/s)
+		time_estimate=$(formatSeconds $((now_b/speed)))
+
+		if [ "${speed}" -lt "0" ]; then
+			echo -n "\rsync: writeback increasing. Remaining: ${remaining_nice}"
+			start_b=$(dirtyBytes)
+			start_ts=$(date +%s)
+		else
+			echo "\r$(progressbar "${writen}" "${start_b}") Remaining: ${remaining_nice} (${time_estimate} - syncing at ${speed_nice}"
+		fi
+	done
+	set -m
+
+	echo ""
+}
+
+
+
 export GRAPHVIZ_DOT=/usr/bin/dot
 export LC_TIME=en_DK.UTF-8
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
