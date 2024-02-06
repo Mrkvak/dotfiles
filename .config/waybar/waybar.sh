@@ -26,7 +26,7 @@ vpn() {
 
 network() {
 	NETSTATUS=""
-	IFACE_UP=$(ip -j a l | jq -r '.[] | select(.operstate == "UP").ifname')
+	IFACE_UP=$(ip -j a l | jq -r '.[] | select(.operstate == "UP").ifname | select ( (contains ( "veth") | not) and (contains ( "docker") | not) and (contains ( "br-") | not) )')
 	
 	WLAN_IFACE=$(echo "$IFACE_UP" | grep wlan)
 	ETH_IFACE=$(echo "$IFACE_UP" | grep eth)
