@@ -117,10 +117,12 @@ cpu() {
 		CPU_CRIT="normal"
 	fi
 
-	CPU_TEMP=$(echo "$(cat /sys/class/hwmon/hwmon0/temp1_input)/1000" | bc)
-	if [ -z "$CPU_TEMP" ]; then
-		CPU_TEMP=$(echo "$(cat /sys/class/hwmon/hwmon1/temp1_input)/1000" | bc)
+	hwmon=$(grep coretemp /sys/class/hwmon/hwmon*/name|grep -o 'hwmon[0-9]')
+	if [ -z "${hwmon}" ] || [ ! -e "/sys/class/hwmon/${hwmon}/temp1_input" ]; then
+		hwmon=$(grep coretemp /sys/class/hwmon/hwmon*/name|grep -o 'hwmon[0-9]')
 	fi
+
+	CPU_TEMP=$(echo "$(cat /sys/class/hwmon/${hwmon}/temp1_input)/1000" | bc)
 	if [ -z "$CPU_TEMP" ]; then
 		CPU_TEMP="??"
 	elif [ "$CPU_TEMP" -gt 90 ]; then
