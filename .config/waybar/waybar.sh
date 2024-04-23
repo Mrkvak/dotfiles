@@ -188,7 +188,7 @@ battery() {
 
 
 brightness() {
-	BRT_LEVEL=$(~/.config/sway/backlight.sh)
+	BRT_LEVEL=$(~/.config/hypr/backlight.sh)
 	printf "{\"text\": \"\uf109%+3s%%\"},\n" "$BRT_LEVEL"
 }
 
