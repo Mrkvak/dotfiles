@@ -35,7 +35,9 @@ $terminal = foot
 $fileManager = dolphin
 $menu = wofi --show drun
 
-env = XCURSOR_SIZE,24
+#env = XCURSOR_SIZE,24
+env = HYPRCURSOR_SIZE,30
+env = HYPRCURSOR_THEME,XCursor-Pro-Dark
 env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
 
 #env = LIBVA_DRIVER_NAME,nvidia
@@ -239,7 +241,9 @@ bindm = $mainMod, mouse:273, resizewindow
 bind = $mainMod,F,fullscreen,1 
 
 exec-once = swayidle -w -C $HOME/.config/swayidle/config
+exec-once = hyprctl setcursor XCursor-Pro-Dark 30
 exec-once = waybar
 exec-once = gentoo-pipewire-launcher restart
 exec-once = hyprpaper
 exec-once = ~/.config/hypr/randomwp.sh
+
