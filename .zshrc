@@ -209,7 +209,7 @@ syncv() {
 
 
 export GRAPHVIZ_DOT=/usr/bin/dot
-export LC_TIME=en_DK.UTF-8
+#export LC_TIME=en_IE.UTF-8
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 export MC_SKIN=$HOME/.mc/selenized.ini
 

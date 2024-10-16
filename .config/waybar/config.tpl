@@ -83,7 +83,7 @@
         "spacing": 10
     },
     "clock": {
-        // "timezone": "America/New_York",
+//        "timezone": "Europe/Prague",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format": "{:%Y-%m-%d %I:%M:%S}",
 	   "interval": 1

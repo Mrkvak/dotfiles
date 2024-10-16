@@ -131,6 +131,7 @@ gestures {
 misc {
     # See https://wiki.hyprland.org/Configuring/Variables/ for more
     force_default_wallpaper = -1 # Set to 0 to disable the anime mascot wallpapers
+    vfr = true
 }
 
 # Example per-device config
@@ -220,7 +221,7 @@ bind=, XF86MonBrightnessUp, exec, ~/.config/hypr/backlight.sh inc
 bind=, XF86MonBrightnessDown, exec, ~/.config/hypr/backlight.sh dec
 
 bind=, Print, exec,~/.config/hypr/screenshot.sh
-bind= $mainMod, L, exec, swaylock -c 000000
+bind= $mainMod, L, exec, hyprlock
 bind= $mainMod, S, exec, ~/.config/hypr/suspend.sh
 
 #
