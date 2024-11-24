@@ -85,7 +85,7 @@
     "clock": {
 //        "timezone": "Europe/Prague",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%Y-%m-%d %I:%M:%S}",
+        "format": "{:%Y-%m-%d %H:%M:%S}",
 	   "interval": 1
     },
 }
