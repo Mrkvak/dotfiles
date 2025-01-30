@@ -40,11 +40,16 @@ env = HYPRCURSOR_SIZE,30
 env = HYPRCURSOR_THEME,XCursor-Pro-Dark
 env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
 
-#env = LIBVA_DRIVER_NAME,nvidia
 env = XDG_SESSION_TYPE,wayland
-#env = GBM_BACKEND,nvidia-drm
-#env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WLR_NO_HARDWARE_CURSORS,1
+
+#ifdef work
+env = LIBVA_DRIVER_NAME,nvidia
+env = GBM_BACKEND,nvidia-drm
+env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+cursor {
+	no_hardware_cursors = true
+}
+#endif
 
 input {
     kb_layout = us,cz
@@ -91,10 +96,10 @@ decoration {
         vibrancy = 0.1696
     }
 
-    drop_shadow = true
-    shadow_range = 4
-    shadow_render_power = 3
-    col.shadow = rgba(1a1a1aee)
+#    drop_shadow = true
+#    shadow_range = 4
+#    shadow_render_power = 3
+#    col.shadow = rgba(1a1a1aee)
 }
 
 animations {
@@ -132,6 +137,8 @@ misc {
     # See https://wiki.hyprland.org/Configuring/Variables/ for more
     force_default_wallpaper = -1 # Set to 0 to disable the anime mascot wallpapers
     vfr = true
+    mouse_move_enables_dpms = true
+    key_press_enables_dpms = true
 }
 
 # Example per-device config
@@ -221,7 +228,7 @@ bind=, XF86MonBrightnessUp, exec, ~/.config/hypr/backlight.sh inc
 bind=, XF86MonBrightnessDown, exec, ~/.config/hypr/backlight.sh dec
 
 bind=, Print, exec,~/.config/hypr/screenshot.sh
-bind= $mainMod, L, exec, hyprlock
+bind= $mainMod, L, exec, swaylock
 bind= $mainMod, S, exec, ~/.config/hypr/suspend.sh
 
 #
