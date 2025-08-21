@@ -254,4 +254,5 @@ exec-once = waybar
 exec-once = gentoo-pipewire-launcher restart
 exec-once = hyprpaper
 exec-once = ~/.config/hypr/randomwp.sh
+exec-once = wl-paste -t text --watch clipman store --no-persist
 
