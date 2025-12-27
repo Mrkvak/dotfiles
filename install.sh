@@ -1,7 +1,7 @@
 #!/bin/bash
 
 case "$1" in
-	"ntb|work|srv")
+	ntb|work|srv)
 		;;
 	*)
 		echo "Usage: $0 ntb|work|srv"
@@ -19,7 +19,8 @@ args=""
 for exclude in $excludes; do
 	args="$args --exclude $exclude"
 done
-rsync -av ./ "$HOME/" $excludes
+
+rsync $args -av ./ "$HOME/"
 
 
 find . -name "*.tpl"| while read -r i; do
