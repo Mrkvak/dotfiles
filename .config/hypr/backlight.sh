@@ -6,6 +6,7 @@ STEP_DEFAULT=10
 
 BL_CURRENT=$(cat /sys/class/backlight/$BL_DRIVER/brightness)
 BL_MAX=$(cat /sys/class/backlight/$BL_DRIVER/max_brightness)
+STEP_DEFAULT=$((BL_MAX/10))
 
 if [ -n "$2" ]; then
 	STEP=$2
