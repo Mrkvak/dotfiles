@@ -1,4 +1,4 @@
-{
+		{
     "height": 30, // Waybar height (to be removed for auto height)
     "spacing": 4, // Gaps between modules (4px)
 
@@ -28,13 +28,13 @@
 	"custom/brightness": {
 		"exec": "$HOME/.config/waybar/waybar.sh brightness",
 		"return-type": "json",
-		"interval": 1
+		"interval": 5
 	},
 
 	"custom/vpn": {
 		"exec": "$HOME/.config/waybar/waybar.sh vpn",
 		"return-type": "json",
-		"interval": 5
+		"interval": 30
 	},
 	"custom/separator": {
 	    "format": "|",
@@ -45,37 +45,37 @@
 	"custom/network": {
 		"exec": "$HOME/.config/waybar/waybar.sh network",
 		"return-type": "json",
-		"interval": 5
+		"interval": 30
 	},
 
 	"custom/volume": {
 		"exec": "$HOME/.config/waybar/waybar.sh volume",
 		"return-type": "json",
-		"interval": 1
+		"interval": 5
 	},
 
 	"custom/cpu": {
 		"exec": "$HOME/.config/waybar/waybar.sh cpu",
 		"return-type": "json",
-		"interval": 1
+		"interval": 5
 	},
 
 	"custom/mem": {
 		"exec": "$HOME/.config/waybar/waybar.sh mem",
 		"return-type": "json",
-		"interval": 1
+		"interval": 5
 	},
 
 	"custom/battery": {
 		"exec": "$HOME/.config/waybar/waybar.sh battery",
 		"return-type": "json",
-		"interval": 1
+		"interval": 30
 	},
 
 	"custom/keyboard": {
 		"exec": "$HOME/.config/waybar/waybar.sh keyboard",
 		"return-type": "json",
-		"interval": 1
+		"interval": 5
 	},
 
     "tray": {
