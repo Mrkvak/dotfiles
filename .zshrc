@@ -214,4 +214,8 @@ export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 export MC_SKIN=$HOME/.mc/selenized.ini
 
 #export JDK_HOME=/usr/lib/jvm/jdk1.8.0_181_x64; export JAVA_HOME=$JDK_HOME; export PATH=$JDK_HOME/bin:$PATH
+alias tn="tmux new"
+alias tns="tmux new -s"
+alias ta="tmux attach"
+alias tas="tmux attach -t"
 

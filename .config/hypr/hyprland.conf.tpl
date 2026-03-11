@@ -2,7 +2,7 @@
 #ifdef work
 $monitor_left=HDMI-A-1
 $monitor_center=DP-1
-$monitor_right=HDMI-A-2
+$monitor_right=DVI-D-1
 monitor=$monitor_left,2560x1440,0x0,1
 monitor=$monitor_center,2560x1440,2560x0,1
 monitor=$monitor_right,2560x1440,5120x0,1
@@ -41,14 +41,27 @@ env = HYPRCURSOR_THEME,XCursor-Pro-Dark
 env = QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that
 
 env = XDG_SESSION_TYPE,wayland
+env = MOZ_ENABLE_WAYLAND=1
 
 #ifdef work
-env = LIBVA_DRIVER_NAME,nvidia
-env = GBM_BACKEND,nvidia-drm
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-cursor {
-	no_hardware_cursors = true
-}
+#env = LIBVA_DRIVER_NAME,nvidia
+#env = GBM_BACKEND,nvidia-drm
+#env = __GLX_VENDOR_LIBRARY_NAME,nvidia
+#env = ELECTRON_OZONE_PLATFORM_HINT,auto
+
+#env = WLR_NO_HARDWARE_CURSORS,1
+#env = WLR_RENDERER,vulkan
+#env = WLR_BACKEND,drm
+
+#env = __GL_GSYNC_ALLOWED,0
+#env = __GL_VRR_ALLOWED,0
+#env = __GL_THREADED_OPTIMIZATIONS,1
+#env = WLR_DRM_NO_ATOMIC,1
+
+#cursor {
+#	no_hardware_cursors = true
+#}
+
 #endif
 
 input {
@@ -125,9 +138,15 @@ dwindle {
 
 
 misc {
-    # See https://wiki.hyprland.org/Configuring/Variables/ for more
     force_default_wallpaper = -1 # Set to 0 to disable the anime mascot wallpapers
+#ifdef work
+	vfr = 0
+	vrr = 0
+#endif
+
+#ifdef ntb
     vfr = true
+#endif
     mouse_move_enables_dpms = true
     key_press_enables_dpms = true
 }
@@ -145,7 +164,7 @@ xwayland {
 # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 #windowrulev2 = nomaximizerequest, class:.* # You'll probably like this.
 
-
+windowrulev2 = noanim, class:^(firefox)$
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
 $mainMod = SUPER
