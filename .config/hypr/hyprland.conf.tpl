@@ -132,7 +132,7 @@ animations {
 
 dwindle {
     # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-    pseudotile = true # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+#    pseudotile = true # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
     preserve_split = true # you probably want this
 }
 
@@ -140,12 +140,12 @@ dwindle {
 misc {
     force_default_wallpaper = -1 # Set to 0 to disable the anime mascot wallpapers
 #ifdef work
-	vfr = 0
+#	vfr = 0
 	vrr = 0
 #endif
 
 #ifdef ntb
-    vfr = true
+#    vfr = true
 #endif
     mouse_move_enables_dpms = true
     key_press_enables_dpms = true
@@ -177,7 +177,7 @@ bind = $mainMod, E, exec, $fileManager
 bind = $mainMod, SPACE, togglefloating,
 bind = $mainMod, R, exec, $menu
 bind = $mainMod, P, pseudo, # dwindle
-bind = $mainMod, J, togglesplit, # dwindle
+#bind = $mainMod, J, togglesplit, # dwindle
 
 # Move focus with mainMod + arrow keys
 bind = $mainMod, left, movefocus, l
