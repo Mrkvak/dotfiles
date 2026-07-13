@@ -137,16 +137,30 @@ dwindle {
 }
 
 
+animations {
+    enabled = false
+}
+decoration {
+    blur {
+        enabled = false
+    }
+}
+misc {
+    vrr = 1       # if your panel supports it
+}
+
+
+
 misc {
     force_default_wallpaper = -1 # Set to 0 to disable the anime mascot wallpapers
-#ifdef work
-#	vfr = 0
-	vrr = 0
-#endif
+##ifdef work
+##	vfr = 0
+#	vrr = 0
+##endif
 
-#ifdef ntb
-#    vfr = true
-#endif
+##ifdef ntb
+##    vfr = true
+##endif
     mouse_move_enables_dpms = true
     key_press_enables_dpms = true
 }
