@@ -29,6 +29,17 @@ find . -name "*.tpl"| while read -r i; do
 	unifdef -t -Untb -Uwork "-D$1" "$i" > "$HOME/$TGTN"
 done
 
+# Files this repo used to install but no longer does (rsync does not delete them).
+stale=".config/hypr/hyprland.conf"
+if [ "$1" != "srv" ]; then
+	for f in $stale; do
+		if [ -e "$HOME/$f" ]; then
+			echo "Removing stale $f"
+			rm -f "$HOME/$f"
+		fi
+	done
+fi
+
 if [ "$1" != "srv" ]; then
 	gsettings set org.gnome.desktop.interface gtk-theme oomox-mrkvoschema
 	gsettings set org.gnome.desktop.interface icon-theme oomox-mrkvoschema

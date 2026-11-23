@@ -71,7 +71,9 @@ button:hover {
 	color: #8ee2fe;
 }
 
-.alert {
+/* .alert: custom scripts; .critical: built-in module states */
+.alert,
+.critical {
 	color: red;
 }
 

@@ -1,41 +1,70 @@
--- Hyprland Lua config (template, processed by install.sh via unifdef)
+-- Hyprland Lua config, shared by all machines.
+-- Per-machine settings are picked at runtime by hostname (see HOSTS below).
 -- See https://wiki.hypr.land/configuring/
+
+-----------------
+---- MACHINE ----
+-----------------
+
+local function read_hostname()
+    local f = io.open("/proc/sys/kernel/hostname")
+    if not f then
+        return ""
+    end
+    local h = f:read("l") or ""
+    f:close()
+    return h
+end
+
+local HOSTS = {
+    -- work desktop: three 1440p monitors, left to right
+    maxhass = {
+        profile  = "work",
+        monitors = {
+            { output = "HDMI-A-1", mode = "2560x1440", position = "0x0",    scale = 1 },
+            { output = "DP-1",     mode = "2560x1440", position = "2560x0", scale = 1 },
+            { output = "DVI-D-1",  mode = "2560x1440", position = "5120x0", scale = 1 },
+        },
+        left = "HDMI-A-1", center = "DP-1", right = "DVI-D-1",
+    },
+    -- notebook
+    blackdaemon = {
+        profile  = "ntb",
+        monitors = {
+            { output = "", mode = "highres", position = "auto", scale = 1 },
+        },
+        left = "eDP-1", center = "eDP-1", right = "eDP-1",
+    },
+}
+
+-- Unknown host: any monitor, automatic layout, no workspace pinning.
+local host = HOSTS[read_hostname()] or {
+    profile  = "default",
+    monitors = { { output = "", mode = "preferred", position = "auto", scale = "auto" } },
+}
+
 
 ------------------
 ---- MONITORS ----
 ------------------
 
-local monitor_left, monitor_center, monitor_right
-
--- WORK DESKTOP SETTINGS:
-#ifdef work
-monitor_left   = "HDMI-A-1"
-monitor_center = "DP-1"
-monitor_right  = "DVI-D-1"
-hl.monitor({ output = monitor_left,   mode = "2560x1440", position = "0x0",    scale = 1 })
-hl.monitor({ output = monitor_center, mode = "2560x1440", position = "2560x0", scale = 1 })
-hl.monitor({ output = monitor_right,  mode = "2560x1440", position = "5120x0", scale = 1 })
-#endif
-
--- HOME SETTINGS:
-#ifdef ntb
-hl.monitor({ output = "", mode = "highres", position = "auto", scale = 1 })
-monitor_left   = "eDP-1"
-monitor_center = "eDP-1"
-monitor_right  = "eDP-1"
-#endif
+for _, m in ipairs(host.monitors) do
+    hl.monitor(m)
+end
 
 -- Workspaces 1-4 left, 5-8 center, 9-12 right
-for i = 1, 12 do
-    local mon
-    if i <= 4 then
-        mon = monitor_left
-    elseif i <= 8 then
-        mon = monitor_center
-    else
-        mon = monitor_right
+if host.left then
+    for i = 1, 12 do
+        local mon
+        if i <= 4 then
+            mon = host.left
+        elseif i <= 8 then
+            mon = host.center
+        else
+            mon = host.right
+        end
+        hl.workspace_rule({ workspace = tostring(i), monitor = mon })
     end
-    hl.workspace_rule({ workspace = tostring(i), monitor = mon })
 end
 
 
@@ -45,7 +74,7 @@ end
 
 local terminal    = "foot"
 local fileManager = "dolphin"
-local menu        = "wofi --show drun"
+local menu        = "hyprlauncher --toggle"
 
 
 -------------------------------
@@ -59,24 +88,6 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt5ct") -- change to qt6ct if you have that
 
 hl.env("XDG_SESSION_TYPE", "wayland")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
-
-#ifdef work
--- hl.env("LIBVA_DRIVER_NAME", "nvidia")
--- hl.env("GBM_BACKEND", "nvidia-drm")
--- hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
--- hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
-
--- hl.env("WLR_NO_HARDWARE_CURSORS", "1")
--- hl.env("WLR_RENDERER", "vulkan")
--- hl.env("WLR_BACKEND", "drm")
-
--- hl.env("__GL_GSYNC_ALLOWED", "0")
--- hl.env("__GL_VRR_ALLOWED", "0")
--- hl.env("__GL_THREADED_OPTIMIZATIONS", "1")
--- hl.env("WLR_DRM_NO_ATOMIC", "1")
-
--- hl.config({ cursor = { no_hardware_cursors = true } })
-#endif
 
 
 -------------------
@@ -92,6 +103,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("~/.config/hypr/randomwp.sh")
     hl.exec_cmd("wl-paste -t text --watch clipman store --no-persist")
     hl.exec_cmd("wlsunset -l 51.0 -L 15.0")
+    hl.exec_cmd("hyprlauncher --daemon")
 end)
 
 
@@ -199,7 +211,7 @@ end
 hl.bind(key(mainMod, "Return"),          hl.dsp.exec_cmd(terminal))
 hl.bind(key(mainMod, "Q"),               hl.dsp.exec_cmd(terminal))
 hl.bind(key(mainMod .. " + SHIFT", "C"), hl.dsp.window.close())
-hl.bind(key(mainMod, "M"),               hl.dsp.exit())
+hl.bind(key(mainMod .. " + SHIFT", "M"), hl.dsp.exit()) -- shifted so it is hard to hit by accident
 hl.bind(key(mainMod, "E"),               hl.dsp.exec_cmd(fileManager))
 hl.bind(key(mainMod, "SPACE"),           hl.dsp.window.float({ action = "toggle" }))
 hl.bind(key(mainMod, "R"),               hl.dsp.exec_cmd(menu))
@@ -222,7 +234,7 @@ for i = 1, 12 do
 end
 
 -- Media / hardware keys
-hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"),   { repeating = true })
+hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),   { locked = true, repeating = true })
 hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),  { locked = true })
 hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"))
@@ -231,6 +243,7 @@ hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("~/.config/hypr/backlight.sh in
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("~/.config/hypr/backlight.sh dec"))
 
 hl.bind("Print",           hl.dsp.exec_cmd("~/.config/hypr/screenshot.sh"))
+hl.bind("SHIFT + Print",   hl.dsp.exec_cmd("~/.config/hypr/screenshot.sh region"))
 hl.bind(key(mainMod, "L"), hl.dsp.exec_cmd("pgrep -x swaylock >/dev/null || swaylock -f"))
 hl.bind(key(mainMod, "S"), hl.dsp.exec_cmd("~/.config/hypr/suspend.sh"))
 

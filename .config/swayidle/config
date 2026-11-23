@@ -1,2 +1,2 @@
-timeout 300 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on'
+timeout 300 "hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })'" resume "hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'"
 timeout 360 'pgrep -x swaylock >/dev/null || swaylock -f'
