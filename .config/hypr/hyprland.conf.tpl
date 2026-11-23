@@ -250,7 +250,7 @@ bind=, XF86MonBrightnessUp, exec, ~/.config/hypr/backlight.sh inc
 bind=, XF86MonBrightnessDown, exec, ~/.config/hypr/backlight.sh dec
 
 bind=, Print, exec,~/.config/hypr/screenshot.sh
-bind= $mainMod, L, exec, swaylock
+bind= $mainMod, L, exec, pgrep -x swaylock >/dev/null || swaylock -f
 bind= $mainMod, S, exec, ~/.config/hypr/suspend.sh
 
 #

@@ -1,2 +1,2 @@
-timeout 300 'hyprctl dispatch dpms off'
-timeout 360 'swaylock'
+timeout 300 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on'
+timeout 360 'pgrep -x swaylock >/dev/null || swaylock -f'
